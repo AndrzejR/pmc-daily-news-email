@@ -17,7 +17,7 @@ def send_news_email(articles):
     for idx, article in enumerate(articles):
         message += str(idx + 1) + " " + article['title'] + "\n"
         message += article['description'] + "\n\n"
-    message = unicodedata.normalize('NFKD', message).encode('ascii', 'ignore').decode()
+    message = message.encode("utf-8")
     message = f"""Subject: Daily News
 
     {message}
