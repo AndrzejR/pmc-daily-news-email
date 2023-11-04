@@ -1,13 +1,14 @@
 import requests
 import os
+import datetime
 
 api_key = os.getenv("PMCNewsAPIKey")
 topic = "kosovo"
+yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
 url = f"https://newsapi.org/v2/everything?\
 q={topic}\
-&from=2023-10-28\
-&to=from=2023-11-04\
+&from={yesterday}\
 &sortBy=publishedAt\
 &apiKey={api_key}"
 
