@@ -3,27 +3,29 @@ import os
 import datetime
 import send_email
 
-api_key = os.getenv("PMCNewsAPIKey")
-topic = "Poland"
+NEWS_TOPIC = "marathon"
+NR_OF_ARTICLES = 20
+API_KEY = os.getenv("PMCNewsAPIKey")
+
 yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
 url = f"https://newsapi.org/v2/everything?\
-q={topic}\
+q={NEWS_TOPIC}\
 &from={yesterday}\
 &sortBy=publishedAt\
-&apiKey={api_key}"
+&apiKey={API_KEY}\
+&language=en"
 
 response = requests.get(url)
 content = response.json()
 articles = content['articles']
 
 message = ""
-for idx, article in enumerate(articles):
-    message += str(idx + 1) + " " + article['title'] + "\n"
-    message += article['description'] + "\n\n"
-message = f"""Subject: Daily News
+for idx, article in enumerate(articles[:NR_OF_ARTICLES]):
+    if article['title'] is not None:
+        message = (message + str(idx + 1) + " "
+                   + article['title'] + "\n"
+                   + article['description'] + "\n"
+                   + article['url'] + "\n\n")
 
-{message}
-"""
-
-send_email.send_email(message)
+send_email.send_email('Daily News', message)
